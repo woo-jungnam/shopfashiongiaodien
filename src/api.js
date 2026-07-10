@@ -1,6 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://fashionshop-production-4df5.up.railway.app/api/v1';
+const API_BASE_URL = 'https://fashionshop-production-4df5.up.railway.app/api/v1';
 
-// Helper to get headers with JWT token
 const getHeaders = (isMultipart = false) => {
   const token = localStorage.getItem('token');
   const headers = {};
@@ -13,7 +12,6 @@ const getHeaders = (isMultipart = false) => {
   return headers;
 };
 
-// Generic fetch wrapper
 const request = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   const headers = { ...getHeaders(options.isMultipart), ...options.headers };
