@@ -7,7 +7,7 @@ export default function Navbar({ currentTab, setTab, user, onLogout, cartCount }
     <header style={styles.header}>
       <div style={styles.container}>
         <div style={styles.brand} onClick={() => setTab('products')}>
-          <ShoppingBag size={28} color="#a855f7" />
+       
           <span style={styles.brandText}>THADDEUS</span>
         </div>
 
