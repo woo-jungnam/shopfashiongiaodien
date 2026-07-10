@@ -28,7 +28,9 @@ export default function App() {
   // Update cart count badge
   const updateCartCount = async () => {
     try {
-      const cart = await api.getCart(4); // Default customer ID = 4
+      const activeUser = api.getCurrentUser();
+      const userId = activeUser ? activeUser.id : 4;
+      const cart = await api.getCart(userId);
       const count = cart.items ? cart.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
       setCartCount(count);
     } catch (e) {
@@ -37,7 +39,7 @@ export default function App() {
   };
 
   const handleLoginSuccess = (userData) => {
-    setUser({ email: userData.email, roles: userData.roles });
+    setUser({ id: userData.id, email: userData.email, roles: userData.roles });
     setTab('products');
     updateCartCount();
   };
@@ -74,6 +76,7 @@ export default function App() {
           <Cart 
             setTab={setTab} 
             onCartChange={updateCartCount} 
+            user={user}
           />
         );
       case 'checkout':
@@ -85,6 +88,7 @@ export default function App() {
               setTab('payment');
               updateCartCount();
             }} 
+            user={user}
           />
         );
       case 'payment':

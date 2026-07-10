@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import { ClipboardCheck } from 'lucide-react';
 
-export default function Checkout({ setTab, onCheckoutSuccess }) {
+export default function Checkout({ setTab, onCheckoutSuccess, user }) {
   const [cart, setCart] = useState(null);
   const [shippingAddress, setShippingAddress] = useState('');
   const [warehouseId, setWarehouseId] = useState('1'); // Default to first warehouse
@@ -12,7 +12,7 @@ export default function Checkout({ setTab, onCheckoutSuccess }) {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const userId = 4; // Mock user
+  const userId = user ? user.id : 4;
 
   useEffect(() => {
     const fetchCart = async () => {

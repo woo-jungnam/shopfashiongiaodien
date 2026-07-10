@@ -53,7 +53,7 @@ export const api = {
       body: { email, password }
     });
     localStorage.setItem('token', data.accessToken);
-    localStorage.setItem('user', JSON.stringify({ email: data.email, roles: data.roles }));
+    localStorage.setItem('user', JSON.stringify({ id: data.id, email: data.email, roles: data.roles }));
     return data;
   },
 

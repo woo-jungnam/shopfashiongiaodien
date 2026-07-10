@@ -89,10 +89,7 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
     setMessage({ text: '', type: '' });
 
     try {
-      // Mock user ID from token or context. The mock users start from 4 onwards.
-      // We will default to userId = 4 (Nguyen Van A from seed data) if roles include customer.
-      // In a real app we parse this from token, but for now we look up active userId = 4 as standard customer.
-      const userId = 4; 
+      const userId = user ? user.id : 4; 
       await api.addToCart(userId, variant.id, quantity);
       setMessage({ text: 'Thêm vào giỏ hàng thành công!', type: 'success' });
       onAddToCart(); // Refresh navbar cart count

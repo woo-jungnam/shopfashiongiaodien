@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import { Trash2, ShoppingCart, ArrowRight } from 'lucide-react';
 
-export default function Cart({ setTab, onCartChange }) {
+export default function Cart({ setTab, onCartChange, user }) {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Default to mock user ID = 4 (Nguyen Van A) for standard customer
-  const userId = 4;
+  const userId = user ? user.id : 4;
 
   const fetchCart = async () => {
     try {
