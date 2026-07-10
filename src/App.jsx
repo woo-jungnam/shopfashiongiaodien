@@ -28,9 +28,7 @@ export default function App() {
   // Update cart count badge
   const updateCartCount = async () => {
     try {
-      const activeUser = api.getCurrentUser();
-      const userId = activeUser ? activeUser.id : 4;
-      const cart = await api.getCart(userId);
+      const cart = await api.getCart(4); // Default customer ID = 4
       const count = cart.items ? cart.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
       setCartCount(count);
     } catch (e) {
@@ -39,7 +37,7 @@ export default function App() {
   };
 
   const handleLoginSuccess = (userData) => {
-    setUser({ id: userData.id, email: userData.email, roles: userData.roles });
+    setUser({ email: userData.email, roles: userData.roles });
     setTab('products');
     updateCartCount();
   };
@@ -57,14 +55,14 @@ export default function App() {
         return <Auth onLoginSuccess={handleLoginSuccess} setTab={setTab} />;
       case 'products':
         return (
-          <Products 
-            setTab={setTab} 
-            setSelectedProductId={setSelectedProductId} 
+          <Products
+            setTab={setTab}
+            setSelectedProductId={setSelectedProductId}
           />
         );
       case 'product-detail':
         return (
-          <ProductDetail 
+          <ProductDetail
             productId={selectedProductId}
             user={user}
             setTab={setTab}
@@ -73,31 +71,29 @@ export default function App() {
         );
       case 'cart':
         return (
-          <Cart 
-            setTab={setTab} 
-            onCartChange={updateCartCount} 
-            user={user}
+          <Cart
+            setTab={setTab}
+            onCartChange={updateCartCount}
           />
         );
       case 'checkout':
         return (
-          <Checkout 
-            setTab={setTab} 
+          <Checkout
+            setTab={setTab}
             onCheckoutSuccess={(order) => {
               setPaymentOrder(order);
               setTab('payment');
               updateCartCount();
-            }} 
-            user={user}
+            }}
           />
         );
       case 'payment':
         return <Payment order={paymentOrder} setTab={setTab} />;
       case 'orders':
         return (
-          <Orders 
-            setTab={setTab} 
-            setPaymentOrder={setPaymentOrder} 
+          <Orders
+            setTab={setTab}
+            setPaymentOrder={setPaymentOrder}
           />
         );
       default:
@@ -107,14 +103,14 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Navbar 
-        currentTab={tab} 
-        setTab={setTab} 
-        user={user} 
-        onLogout={handleLogout} 
+      <Navbar
+        currentTab={tab}
+        setTab={setTab}
+        user={user}
+        onLogout={handleLogout}
         cartCount={cartCount}
       />
-      
+
       <main className="content">
         {renderContent()}
       </main>

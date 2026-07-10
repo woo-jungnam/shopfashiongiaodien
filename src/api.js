@@ -15,18 +15,18 @@ const getHeaders = (isMultipart = false) => {
 const request = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   const headers = { ...getHeaders(options.isMultipart), ...options.headers };
-  
+
   const config = {
     ...options,
     headers
   };
-  
+
   if (config.body && typeof config.body === 'object' && !options.isMultipart) {
     config.body = JSON.stringify(config.body);
   }
 
   const response = await fetch(url, config);
-  
+
   if (!response.ok) {
     let errorData;
     try {
@@ -40,7 +40,7 @@ const request = async (endpoint, options = {}) => {
   if (response.status === 204) {
     return null;
   }
-  
+
   const text = await response.text();
   return text ? JSON.parse(text) : null;
 };
@@ -81,7 +81,7 @@ export const api = {
 
   getProduct: async (id) => {
     const product = await request(`/products/${id}`);
-    
+
     // Fetch variants & images dynamically as described in the backend controllers
     try {
       const variants = await request(`/products/${id}/variants`);

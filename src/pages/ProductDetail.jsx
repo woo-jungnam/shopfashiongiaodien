@@ -6,7 +6,7 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Selected attributes
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
@@ -20,7 +20,7 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
       try {
         const data = await api.getProduct(productId);
         setProduct(data);
-        
+
         // Auto-select first available options if any
         if (data.variants && data.variants.length > 0) {
           const colors = getAvailableColors(data.variants);
@@ -89,7 +89,10 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
     setMessage({ text: '', type: '' });
 
     try {
-      const userId = user ? user.id : 4; 
+      // Mock user ID from token or context. The mock users start from 4 onwards.
+      // We will default to userId = 4 (Nguyen Van A from seed data) if roles include customer.
+      // In a real app we parse this from token, but for now we look up active userId = 4 as standard customer.
+      const userId = 4;
       await api.addToCart(userId, variant.id, quantity);
       setMessage({ text: 'Thêm vào giỏ hàng thành công!', type: 'success' });
       onAddToCart(); // Refresh navbar cart count
@@ -101,7 +104,7 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
   };
 
   if (loading) return <div style={styles.center}>Đang tải chi tiết sản phẩm...</div>;
-  if (error) return <div style={{...styles.center, color: '#ef4444'}}>{error}</div>;
+  if (error) return <div style={{ ...styles.center, color: '#ef4444' }}>{error}</div>;
   if (!product) return <div style={styles.center}>Không tìm thấy sản phẩm.</div>;
 
   const colors = getAvailableColors(product.variants);
@@ -121,9 +124,9 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
         {/* Images Column */}
         <div style={styles.imageCol}>
           <div className="glass-panel" style={styles.mainImageWrapper}>
-            <img 
-              src={product.images && product.images.length > 0 ? product.images[0].imageUrl : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=600&q=80'} 
-              alt={product.name} 
+            <img
+              src={product.images && product.images.length > 0 ? product.images[0].imageUrl : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=600&q=80'}
+              alt={product.name}
               style={styles.mainImage}
             />
           </div>
@@ -132,7 +135,7 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
         {/* Info Column */}
         <div style={styles.infoCol}>
           <h2>{product.name}</h2>
-          <div style={styles.skuRow}>Mã SKU gốc: <span style={{fontFamily: 'monospace'}}>{product.parentSku}</span></div>
+          <div style={styles.skuRow}>Mã SKU gốc: <span style={{ fontFamily: 'monospace' }}>{product.parentSku}</span></div>
 
           {/* Pricing */}
           <div style={styles.priceContainer}>
@@ -155,9 +158,9 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
               <span style={styles.label}>Màu sắc:</span>
               <div style={styles.buttonGrid}>
                 {colors.map(color => (
-                  <button 
+                  <button
                     key={color}
-                    style={{...styles.optionBtn, ...(selectedColor === color ? styles.activeOption : {})}}
+                    style={{ ...styles.optionBtn, ...(selectedColor === color ? styles.activeOption : {}) }}
                     onClick={() => setSelectedColor(color)}
                   >
                     {color}
@@ -169,7 +172,7 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
 
           {sizes.length > 0 && (
             <div style={styles.selectorGroup}>
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={styles.label}>Kích thước (Size):</span>
                 <button style={styles.sizeGuideLink} onClick={() => setShowSizeGuide(true)}>
                   <Ruler size={14} /> Xem bảng Size
@@ -177,9 +180,9 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
               </div>
               <div style={styles.buttonGrid}>
                 {sizes.map(size => (
-                  <button 
+                  <button
                     key={size}
-                    style={{...styles.optionBtn, ...(selectedSize === size ? styles.activeOption : {})}}
+                    style={{ ...styles.optionBtn, ...(selectedSize === size ? styles.activeOption : {}) }}
                     onClick={() => setSelectedSize(size)}
                   >
                     {size}
@@ -193,13 +196,13 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
           <div style={styles.quantityGroup}>
             <span style={styles.label}>Số lượng:</span>
             <div style={styles.quantityPicker}>
-              <button 
-                style={styles.qtyBtn} 
+              <button
+                style={styles.qtyBtn}
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
               >-</button>
               <span style={styles.qtyVal}>{quantity}</span>
-              <button 
-                style={styles.qtyBtn} 
+              <button
+                style={styles.qtyBtn}
                 onClick={() => setQuantity(q => q + 1)}
               >+</button>
             </div>
@@ -215,8 +218,8 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
           )}
 
           <div style={styles.actions}>
-            <button 
-              className="btn btn-primary" 
+            <button
+              className="btn btn-primary"
               style={styles.addToCartBtn}
               onClick={handleAddToCart}
               disabled={actionLoading || (selectedVariant && selectedVariant.status === 'OUT_OF_STOCK')}

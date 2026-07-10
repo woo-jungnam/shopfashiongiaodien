@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import { Trash2, ShoppingCart, ArrowRight } from 'lucide-react';
 
-export default function Cart({ setTab, onCartChange, user }) {
+export default function Cart({ setTab, onCartChange }) {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const userId = user ? user.id : 4;
+  // Default to mock user ID = 4 (Nguyen Van A) for standard customer
+  const userId = 4;
 
   const fetchCart = async () => {
     try {
@@ -46,7 +47,7 @@ export default function Cart({ setTab, onCartChange, user }) {
   };
 
   if (loading) return <div style={styles.center}>Đang tải giỏ hàng...</div>;
-  if (error) return <div style={{...styles.center, color: '#ef4444'}}>{error}</div>;
+  if (error) return <div style={{ ...styles.center, color: '#ef4444' }}>{error}</div>;
 
   const items = cart ? cart.items : [];
   const subtotal = items.reduce((sum, item) => {
@@ -61,10 +62,10 @@ export default function Cart({ setTab, onCartChange, user }) {
       {items.length === 0 ? (
         <div className="glass-panel" style={styles.emptyCart}>
           <ShoppingCart size={48} color="#6b7280" />
-          <p style={{marginTop: '1rem', color: '#9ca3af'}}>Giỏ hàng của bạn đang trống.</p>
-          <button 
-            className="btn btn-primary" 
-            style={{marginTop: '1.5rem'}}
+          <p style={{ marginTop: '1rem', color: '#9ca3af' }}>Giỏ hàng của bạn đang trống.</p>
+          <button
+            className="btn btn-primary"
+            style={{ marginTop: '1.5rem' }}
             onClick={() => setTab('products')}
           >
             Tiếp tục mua sắm
@@ -77,7 +78,7 @@ export default function Cart({ setTab, onCartChange, user }) {
             {items.map(item => {
               const displayPrice = item.salePrice || item.price;
               const hasSale = !!item.salePrice;
-              
+
               return (
                 <div key={item.id} className="glass-panel" style={styles.itemCard}>
                   <div style={styles.itemInfo}>
@@ -100,12 +101,12 @@ export default function Cart({ setTab, onCartChange, user }) {
 
                     {/* Quantity Picker */}
                     <div style={styles.quantityPicker}>
-                      <button 
+                      <button
                         style={styles.qtyBtn}
                         onClick={() => handleUpdateQty(item.id, item.quantity - 1)}
                       >-</button>
                       <span style={styles.qtyVal}>{item.quantity}</span>
-                      <button 
+                      <button
                         style={styles.qtyBtn}
                         onClick={() => handleUpdateQty(item.id, item.quantity + 1)}
                       >+</button>
@@ -135,18 +136,18 @@ export default function Cart({ setTab, onCartChange, user }) {
             </div>
             <div style={styles.summaryRow}>
               <span>Phí vận chuyển:</span>
-              <span style={{color: '#9ca3af'}}>Tính ở bước sau</span>
-            </div>
-            
-            <div style={styles.divider}></div>
-            
-            <div style={{...styles.summaryRow, fontWeight: '700', fontSize: '1.1rem'}}>
-              <span>Tổng thanh toán:</span>
-              <span style={{color: '#a855f7'}}>{subtotal.toLocaleString()}đ</span>
+              <span style={{ color: '#9ca3af' }}>Tính ở bước sau</span>
             </div>
 
-            <button 
-              className="btn btn-primary" 
+            <div style={styles.divider}></div>
+
+            <div style={{ ...styles.summaryRow, fontWeight: '700', fontSize: '1.1rem' }}>
+              <span>Tổng thanh toán:</span>
+              <span style={{ color: '#a855f7' }}>{subtotal.toLocaleString()}đ</span>
+            </div>
+
+            <button
+              className="btn btn-primary"
               style={styles.checkoutBtn}
               onClick={() => setTab('checkout')}
             >

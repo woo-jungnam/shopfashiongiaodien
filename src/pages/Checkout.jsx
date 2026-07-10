@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../api';
 import { ClipboardCheck } from 'lucide-react';
 
-export default function Checkout({ setTab, onCheckoutSuccess, user }) {
+export default function Checkout({ setTab, onCheckoutSuccess }) {
   const [cart, setCart] = useState(null);
   const [shippingAddress, setShippingAddress] = useState('');
   const [warehouseId, setWarehouseId] = useState('1'); // Default to first warehouse
@@ -12,7 +12,7 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const userId = user ? user.id : 4;
+  const userId = 4; // Mock user
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -52,21 +52,21 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
 
     try {
       const order = await api.createOrder(
-        userId, 
-        shippingAddress, 
-        parseInt(warehouseId), 
-        parseInt(shipperId), 
+        userId,
+        shippingAddress,
+        parseInt(warehouseId),
+        parseInt(shipperId),
         items,
         couponCode || null
       );
-      
+
       // Clear the local cart on success
       try {
         await api.clearCart(userId);
       } catch (e) {
         // Silently fail if cart clear has minor issues
       }
-      
+
       // Notify parent to switch to payment screen
       onCheckoutSuccess(order);
     } catch (err) {
@@ -77,7 +77,7 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
   };
 
   if (loading) return <div style={styles.center}>Đang tải thông tin đặt hàng...</div>;
-  if (error && !cart) return <div style={{...styles.center, color: '#ef4444'}}>{error}</div>;
+  if (error && !cart) return <div style={{ ...styles.center, color: '#ef4444' }}>{error}</div>;
 
   const items = cart ? cart.items : [];
   const subtotal = items.reduce((sum, item) => {
@@ -97,11 +97,11 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
 
             {error && <div style={styles.alertError}>{error}</div>}
 
-            <div className="form-group" style={{marginTop: '1rem'}}>
+            <div className="form-group" style={{ marginTop: '1rem' }}>
               <label className="form-label">Địa chỉ nhận hàng đầy đủ</label>
-              <textarea 
+              <textarea
                 className="form-control"
-                style={{height: '100px', resize: 'vertical'}}
+                style={{ height: '100px', resize: 'vertical' }}
                 value={shippingAddress}
                 onChange={e => setShippingAddress(e.target.value)}
                 placeholder="Số nhà, Tên đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố"
@@ -112,9 +112,9 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
             <div className="grid-cols-2">
               <div className="form-group">
                 <label className="form-label">Kho hàng xuất phát</label>
-                <select 
-                  className="form-control" 
-                  value={warehouseId} 
+                <select
+                  className="form-control"
+                  value={warehouseId}
                   onChange={e => setWarehouseId(e.target.value)}
                 >
                   <option value="1">Kho trung tâm HN (Cầu Giấy)</option>
@@ -125,9 +125,9 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
 
               <div className="form-group">
                 <label className="form-label">Đơn vị vận chuyển</label>
-                <select 
-                  className="form-control" 
-                  value={shipperId} 
+                <select
+                  className="form-control"
+                  value={shipperId}
                   onChange={e => setShipperId(e.target.value)}
                 >
                   <option value="1">Giao Hàng Tiết Kiệm (GHTK) - 30,000đ</option>
@@ -139,8 +139,8 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
 
             <div className="form-group">
               <label className="form-label">Mã giảm giá (Coupon Code)</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 className="form-control"
                 value={couponCode}
                 onChange={e => setCouponCode(e.target.value)}
@@ -153,7 +153,7 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
         {/* Invoice Summary */}
         <div className="glass-panel" style={styles.invoiceCol}>
           <h3>Đơn hàng của bạn</h3>
-          
+
           <div style={styles.itemsScroll}>
             {items.map(item => (
               <div key={item.id} style={styles.itemRow}>
@@ -181,12 +181,12 @@ export default function Checkout({ setTab, onCheckoutSuccess, user }) {
 
           <div style={styles.divider}></div>
 
-          <div style={{...styles.row, fontWeight: '700', fontSize: '1.1rem'}}>
+          <div style={{ ...styles.row, fontWeight: '700', fontSize: '1.1rem' }}>
             <span>Tổng số tiền:</span>
-            <span style={{color: '#a855f7'}}>{(subtotal + 30000).toLocaleString()}đ</span>
+            <span style={{ color: '#a855f7' }}>{(subtotal + 30000).toLocaleString()}đ</span>
           </div>
 
-          <button 
+          <button
             type="submit"
             className="btn btn-primary"
             style={styles.orderBtn}
