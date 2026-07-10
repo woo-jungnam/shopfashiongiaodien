@@ -9,7 +9,7 @@ export default function Payment({ order, setTab }) {
   const [simulationMessage, setSimulationMessage] = useState('');
 
   const merchantBankId = 'MB'; // Military Bank (MB Bank)
-  const merchantAccountNo = '0987654321';
+  const merchantAccountNo = '0902588750';
   const merchantAccountName = 'NGUYEN THANH NAM';
   const transferContent = `Thanh toan ${order.orderCode}`; // Matches standard backend matching string
 
