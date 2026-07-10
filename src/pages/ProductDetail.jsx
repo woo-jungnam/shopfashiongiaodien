@@ -66,10 +66,13 @@ export default function ProductDetail({ productId, user, setTab, onAddToCart }) 
   // Find exact matching variant
   const getSelectedVariant = () => {
     if (!product || !product.variants) return null;
+    const colors = getAvailableColors(product.variants);
+    const sizes = getAvailableSizes(product.variants);
+
     return product.variants.find(v => {
-      const hasColor = v.attributes.some(attr => attr === `Color: ${selectedColor}`);
-      const hasSize = v.attributes.some(attr => attr === `Size: ${selectedSize}`);
-      return hasColor && hasSize;
+      const matchColor = colors.length === 0 || v.attributes.some(attr => attr === `Color: ${selectedColor}`);
+      const matchSize = sizes.length === 0 || v.attributes.some(attr => attr === `Size: ${selectedSize}`);
+      return matchColor && matchSize;
     });
   };
 
